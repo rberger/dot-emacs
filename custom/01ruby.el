@@ -1,7 +1,7 @@
 ;; http://www.emacswiki.org/emacs/RvmEl
 (require 'rvm)
 (rvm-use-default)
-(rvm-activate-corresponding-ruby)
+;; (rvm-activate-corresponding-ruby)
 
 ;;(setq enh-ruby-program "/Users/rberger/.rvm/bin/rvm-auto-ruby")
 (autoload 'enh-ruby-mode "enh-ruby-mode" "Major mode for ruby files" t)
@@ -33,20 +33,30 @@ of FILE in the current directory, suitable for creation"
  
 (require 'compile)
  
-(defun rspec-compile-file ()
-  (interactive)
-  (compile (format "cd %s;bundle exec rspec %s"
-                   (get-closest-gemfile-root)
-                   (file-relative-name (buffer-file-name) (get-closest-gemfile-root))
-                   ) t))
+(require 'rspec-mode)
+(setq-default rspec-use-rvm t)
+
+(defadvice rspec-compile (around rspec-compile-around)
+  "Use BASH shell for running the specs because of ZSH issues."
+  (let ((shell-file-name "/bin/bash"))
+    ad-do-it))
+
+(ad-activate 'rspec-compile)
+
+;; (defun rspec-compile-file ()
+;;   (interactive)
+;;   (compile (format "cd %s;bundle exec rspec %s"
+;;                    (get-closest-gemfile-root)
+;;                    (file-relative-name (buffer-file-name) (get-closest-gemfile-root))
+;;                    ) t))
  
-(defun rspec-compile-on-line ()
-  (interactive)
-  (compile (format "cd %s;bundle exec rspec %s -l %s"
-                   (get-closest-gemfile-root)
-                   (file-relative-name (buffer-file-name) (get-closest-gemfile-root))
-                   (line-number-at-pos)
-                   ) t))
+;; (defun rspec-compile-on-line ()
+;;   (interactive)
+;;   (compile (format "cd %s;bundle exec rspec %s -l %s"
+;;                    (get-closest-gemfile-root)
+;;                    (file-relative-name (buffer-file-name) (get-closest-gemfile-root))
+;;                    (line-number-at-pos)
+;;                    ) t))
  
 (add-hook 'enh-ruby-mode-hook
           (lambda ()
@@ -60,3 +70,6 @@ of FILE in the current directory, suitable for creation"
 
 ;; https://github.com/syohex/emacs-emamux
 (require 'emamux)
+
+(add-hook 'enh-ruby-mode-hook
+          (lambda () (flyspell-prog-mode)))

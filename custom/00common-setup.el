@@ -11,9 +11,10 @@
 ;; Set the starting position and width and height of Emacs Window
 (add-to-list 'default-frame-alist '(left . 0))
 (add-to-list 'default-frame-alist '(top . 0))
-(add-to-list 'default-frame-alist '(height . 45))
-(add-to-list 'default-frame-alist '(width . 175))
- 
+(add-to-list 'default-frame-alist '(height . 60))
+(add-to-list 'default-frame-alist '(width . 99))
+(when window-system (set-frame-size (selected-frame) 170 60))
+
 ;; To get rid of Weird color escape sequences in Emacs.
 ;; Instruct Emacs to use emacs term-info not system term info
 ;; http://stackoverflow.com/questions/8918910/weird-character-zsh-in-emacs-terminal
@@ -169,8 +170,16 @@
 
 ;; auto-save-bufferes-enhanced
 (require 'auto-save-buffers-enhanced)
-(auto-save-buffers-enhanced t)
+(auto-save-buffers-enhanced nil)
 
 ;; browse-kill-ring
 ;; https://github.com/browse-kill-ring/browse-kill-ring
 (require 'browse-kill-ring)
+
+(require 'flyspell)
+(require 'flyspell-lazy)
+(flyspell-lazy-mode 1)
+(setq flyspell-issue-message-flg nil)
+(add-hook 'web-mode-hook
+          (lambda () (flyspell-prog-mode)))
+

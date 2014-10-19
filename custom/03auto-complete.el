@@ -6,3 +6,9 @@
 (add-to-list 'ac-modes 'enh-ruby-mode)
 (add-to-list 'ac-modes 'web-mode)
 (add-hook 'js2-mode-hook 'ac-js2-mode)
+
+;; http://github.com/nonsequitur/smex/blob/master/README.markdown
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; This is your old M-x.
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
